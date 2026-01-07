@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTIE Services - Ferramentas</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/material-darker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+    
+    <header data-testid="main-header">
+        <div class="container">
+            <div class="logo" data-testid="logo">
+                <i class="fas fa-cube"></i>
+                <span>GTIE Services</span>
+            </div>
+            <nav data-testid="main-nav">
+                <a href="/" data-testid="nav-home">Home</a>
+                <a href="/functions" class="active" data-testid="nav-functions">Ferramentas</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="modules-container" data-testid="modules-container">
+        <div class="container">
+            <!-- GTIE Docs -->
+            <section class="module-section" id="docs-module" data-testid="docs-module">
+                <div class="module-header">
+                    <h2><i class="fas fa-file-alt"></i> GTIE Docs</h2>
+                    <div class="module-actions">
+                        <button class="btn-icon" onclick="formatText('bold')" title="Negrito" data-testid="docs-bold-btn">
+                            <i class="fas fa-bold"></i>
+                        </button>
+                        <button class="btn-icon" onclick="formatText('italic')" title="Itálico" data-testid="docs-italic-btn">
+                            <i class="fas fa-italic"></i>
+                        </button>
+                        <button class="btn-icon" onclick="formatText('underline')" title="Sublinhado" data-testid="docs-underline-btn">
+                            <i class="fas fa-underline"></i>
+                        </button>
+                        <button class="btn-primary" onclick="saveDocs()" data-testid="docs-save-pdf-btn">
+                            <i class="fas fa-download"></i> Salvar PDF
+                        </button>
+                        <button class="btn-secondary" onclick="printDocs()" data-testid="docs-print-btn">
+                            <i class="fas fa-print"></i> Imprimir
+                        </button>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <div id="docsEditor" contenteditable="true" class="editor" data-testid="docs-editor">Digite seu documento aqui...</div>
+                </div>
+            </section>
+
+            <!-- GTIE Code -->
+            <section class="module-section" id="code-module" data-testid="code-module">
+                <div class="module-header">
+                    <h2><i class="fas fa-code"></i> GTIE Code</h2>
+                    <div class="module-actions">
+                        <select id="codeLanguage" onchange="changeCodeLanguage()" data-testid="code-language-select">
+                            <option value="htmlmixed">HTML</option>
+                            <option value="css">CSS</option>
+                            <option value="javascript">JavaScript</option>
+                        </select>
+                        <button class="btn-primary" onclick="downloadCode()" data-testid="code-download-btn">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button class="btn-secondary" onclick="downloadCombinedCode()" data-testid="code-download-combined-btn">
+                            <i class="fas fa-file-code"></i> Download HTML Completo
+                        </button>
+                        <button class="btn-secondary" onclick="togglePreview()" data-testid="code-preview-btn">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+                <div class="module-content code-container">
+                    <div class="code-tabs" data-testid="code-tabs">
+                        <button class="tab-btn active" onclick="switchCodeTab('html')" data-testid="code-tab-html">HTML</button>
+                        <button class="tab-btn" onclick="switchCodeTab('css')" data-testid="code-tab-css">CSS</button>
+                        <button class="tab-btn" onclick="switchCodeTab('js')" data-testid="code-tab-js">JavaScript</button>
+                    </div>
+                    <textarea id="htmlEditor" class="code-editor" data-testid="code-editor-html"></textarea>
+                    <textarea id="cssEditor" class="code-editor" style="display:none;" data-testid="code-editor-css"></textarea>
+                    <textarea id="jsEditor" class="code-editor" style="display:none;" data-testid="code-editor-js"></textarea>
+                    <div id="codePreview" class="code-preview" style="display:none;" data-testid="code-preview">
+                        <iframe id="previewFrame" data-testid="code-preview-frame"></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GTIE Calculadora -->
+            <section class="module-section" id="calc-module" data-testid="calc-module">
+                <div class="module-header">
+                    <h2><i class="fas fa-calculator"></i> GTIE Calculadora</h2>
+                </div>
+                <div class="module-content">
+                    <div class="calculator" data-testid="calculator">
+                        <div class="calc-display" id="calcDisplay" data-testid="calc-display">0</div>
+                        <div class="calc-buttons">
+                            <button onclick="clearCalc()" class="calc-btn calc-clear" data-testid="calc-btn-c">C</button>
+                            <button onclick="appendCalc('%')" class="calc-btn calc-operator" data-testid="calc-btn-percent">%</button>
+                            <button onclick="appendCalc('/')" class="calc-btn calc-operator" data-testid="calc-btn-divide">÷</button>
+                            <button onclick="deleteCalc()" class="calc-btn calc-operator" data-testid="calc-btn-delete">⌫</button>
+                            
+                            <button onclick="appendCalc('7')" class="calc-btn" data-testid="calc-btn-7">7</button>
+                            <button onclick="appendCalc('8')" class="calc-btn" data-testid="calc-btn-8">8</button>
+                            <button onclick="appendCalc('9')" class="calc-btn" data-testid="calc-btn-9">9</button>
+                            <button onclick="appendCalc('*')" class="calc-btn calc-operator" data-testid="calc-btn-multiply">×</button>
+                            
+                            <button onclick="appendCalc('4')" class="calc-btn" data-testid="calc-btn-4">4</button>
+                            <button onclick="appendCalc('5')" class="calc-btn" data-testid="calc-btn-5">5</button>
+                            <button onclick="appendCalc('6')" class="calc-btn" data-testid="calc-btn-6">6</button>
+                            <button onclick="appendCalc('-')" class="calc-btn calc-operator" data-testid="calc-btn-minus">-</button>
+                            
+                            <button onclick="appendCalc('1')" class="calc-btn" data-testid="calc-btn-1">1</button>
+                            <button onclick="appendCalc('2')" class="calc-btn" data-testid="calc-btn-2">2</button>
+                            <button onclick="appendCalc('3')" class="calc-btn" data-testid="calc-btn-3">3</button>
+                            <button onclick="appendCalc('+')" class="calc-btn calc-operator" data-testid="calc-btn-plus">+</button>
+                            
+                            <button onclick="appendCalc('0')" class="calc-btn calc-zero" data-testid="calc-btn-0">0</button>
+                            <button onclick="appendCalc('.')" class="calc-btn" data-testid="calc-btn-dot">.</button>
+                            <button onclick="calculateCalc()" class="calc-btn calc-equals" data-testid="calc-btn-equals">=</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GTIE Agenda -->
+            <section class="module-section" id="agenda-module" data-testid="agenda-module">
+                <div class="module-header">
+                    <h2><i class="fas fa-calendar-alt"></i> GTIE Agenda</h2>
+                    <button class="btn-primary" onclick="exportAgenda()" data-testid="agenda-export-btn">
+                        <i class="fas fa-download"></i> Exportar PDF
+                    </button>
+                </div>
+                <div class="module-content">
+                    <div class="agenda-form" data-testid="agenda-form">
+                        <input type="text" id="agendaTitle" placeholder="Título do evento" data-testid="agenda-title-input">
+                        <input type="date" id="agendaDate" data-testid="agenda-date-input">
+                        <input type="time" id="agendaTime" data-testid="agenda-time-input">
+                        <button onclick="addAgendaItem()" class="btn-secondary" data-testid="agenda-add-btn">
+                            <i class="fas fa-plus"></i> Adicionar Evento
+                        </button>
+                    </div>
+                    <div id="agendaList" class="agenda-list" data-testid="agenda-list"></div>
+                </div>
+            </section>
+
+            <!-- GTIE Focus -->
+            <section class="module-section" id="focus-module" data-testid="focus-module">
+                <div class="module-header">
+                    <h2><i class="fas fa-bullseye"></i> GTIE Focus</h2>
+                </div>
+                <div class="module-content">
+                    <div class="focus-form" data-testid="focus-form">
+                        <input type="text" id="focusGoal" placeholder="Descrição da meta" data-testid="focus-goal-input">
+                        <select id="focusPriority" data-testid="focus-priority-select">
+                            <option value="alta">Alta Prioridade</option>
+                            <option value="media">Média Prioridade</option>
+                            <option value="baixa">Baixa Prioridade</option>
+                        </select>
+                        <button onclick="addFocusGoal()" class="btn-secondary" data-testid="focus-add-btn">
+                            <i class="fas fa-plus"></i> Adicionar Meta
+                        </button>
+                    </div>
+                    <div id="focusList" class="focus-list" data-testid="focus-list"></div>
+                </div>
+            </section>
+
+            <!-- GTIE Planilhas -->
+            <section class="module-section" id="sheets-module" data-testid="sheets-module">
+                <div class="module-header">
+                    <h2><i class="fas fa-table"></i> GTIE Planilhas</h2>
+                    <button class="btn-primary" onclick="exportSheet()" data-testid="sheets-export-btn">
+                        <i class="fas fa-download"></i> Exportar PDF
+                    </button>
+                </div>
+                <div class="module-content">
+                    <div class="sheet-container" data-testid="sheet-container">
+                        <table id="spreadsheet" class="spreadsheet" data-testid="spreadsheet"></table>
+                    </div>
+                    <div class="sheet-info" data-testid="sheet-info">
+                        <p><strong>Soma Linha:</strong> <span id="rowSum" data-testid="row-sum">0</span></p>
+                        <p><strong>Soma Coluna:</strong> <span id="colSum" data-testid="col-sum">0</span></p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer data-testid="main-footer">
+        <div class="container">
+            <p>&copy; <span id="currentYear"></span> GTIE Services. Todos os direitos reservados.</p>
+            <div class="footer-links">
+                <a href="#" data-testid="footer-privacy">Privacidade</a>
+                <a href="#" data-testid="footer-terms">Termos</a>
+                <a href="#" data-testid="footer-contact">Contato</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
